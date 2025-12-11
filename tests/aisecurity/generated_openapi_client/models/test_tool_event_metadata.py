@@ -50,15 +50,15 @@ class TestToolEventMetadata(unittest.TestCase):
         if include_optional:
             return ToolEventMetadata(
                 ecosystem = 'mcp',
-                method = 'tools/call',
-                server_name = 'MCP server',
+                method = 'tools/list',
+                server_name = 'Internal MCP server',
                 tool_invoked = 'get_file'
             )
         else:
             return ToolEventMetadata(
                 ecosystem = 'mcp',
-                method = 'tools/call',
-                server_name = 'MCP server',
+                method = 'tools/list',
+                server_name = 'Internal MCP server',
         )
         """
 

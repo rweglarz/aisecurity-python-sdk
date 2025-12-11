@@ -30,7 +30,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -41,10 +41,10 @@ class ToolEventMetadata(BaseModel):
     ToolEventMetadata
     """  # noqa: E501
 
-    ecosystem: StrictStr
-    method: StrictStr
-    server_name: StrictStr
-    tool_invoked: Optional[StrictStr] = None
+    ecosystem: StrictStr = Field(description="Ecosystem or protocol of the tool")
+    method: StrictStr = Field(description="Method type of the tool event")
+    server_name: StrictStr = Field(description="Name of the MCP server")
+    tool_invoked: Optional[StrictStr] = Field(default=None, description="Name of the tool")
     __properties: ClassVar[List[str]] = ["ecosystem", "method", "server_name", "tool_invoked"]
 
     model_config = ConfigDict(

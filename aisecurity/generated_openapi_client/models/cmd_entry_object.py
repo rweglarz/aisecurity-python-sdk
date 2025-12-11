@@ -32,32 +32,22 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from aisecurity.generated_openapi_client.models.cmd_entry_object import CmdEntryObject
-from aisecurity.generated_openapi_client.models.malware_report_object import MalwareReportObject
-from aisecurity.generated_openapi_client.models.mc_entry_object import McEntryObject
 from typing import Optional, Set
 from typing_extensions import Self
 
 
-class McReportObject(BaseModel):
+class CmdEntryObject(BaseModel):
     """
-    McReportObject
+    CmdEntryObject
     """  # noqa: E501
 
-    all_code_blocks: Optional[List[StrictStr]] = None
-    code_analysis_by_type: Optional[List[McEntryObject]] = None
+    code_block: Optional[StrictStr] = Field(
+        default=None, description="Code block extracted from prompt or response content"
+    )
     verdict: Optional[StrictStr] = Field(
         default=None, description='Detection service verdict such as "malicious" or "benign"'
     )
-    malware_script_report: Optional[MalwareReportObject] = None
-    command_injection_report: Optional[List[CmdEntryObject]] = None
-    __properties: ClassVar[List[str]] = [
-        "all_code_blocks",
-        "code_analysis_by_type",
-        "verdict",
-        "malware_script_report",
-        "command_injection_report",
-    ]
+    __properties: ClassVar[List[str]] = ["code_block", "verdict"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,7 +66,7 @@ class McReportObject(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of McReportObject from a JSON string"""
+        """Create an instance of CmdEntryObject from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -96,45 +86,16 @@ class McReportObject(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in code_analysis_by_type (list)
-        _items = []
-        if self.code_analysis_by_type:
-            for _item_code_analysis_by_type in self.code_analysis_by_type:
-                if _item_code_analysis_by_type:
-                    _items.append(_item_code_analysis_by_type.to_dict())
-            _dict["code_analysis_by_type"] = _items
-        # override the default output from pydantic by calling `to_dict()` of malware_script_report
-        if self.malware_script_report:
-            _dict["malware_script_report"] = self.malware_script_report.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in command_injection_report (list)
-        _items = []
-        if self.command_injection_report:
-            for _item_command_injection_report in self.command_injection_report:
-                if _item_command_injection_report:
-                    _items.append(_item_command_injection_report.to_dict())
-            _dict["command_injection_report"] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of McReportObject from a dict"""
+        """Create an instance of CmdEntryObject from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "all_code_blocks": obj.get("all_code_blocks"),
-            "code_analysis_by_type": [McEntryObject.from_dict(_item) for _item in obj["code_analysis_by_type"]]
-            if obj.get("code_analysis_by_type") is not None
-            else None,
-            "verdict": obj.get("verdict"),
-            "malware_script_report": MalwareReportObject.from_dict(obj["malware_script_report"])
-            if obj.get("malware_script_report") is not None
-            else None,
-            "command_injection_report": [CmdEntryObject.from_dict(_item) for _item in obj["command_injection_report"]]
-            if obj.get("command_injection_report") is not None
-            else None,
-        })
+        _obj = cls.model_validate({"code_block": obj.get("code_block"), "verdict": obj.get("verdict")})
         return _obj

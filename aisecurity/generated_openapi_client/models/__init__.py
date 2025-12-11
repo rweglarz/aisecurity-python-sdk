@@ -34,6 +34,7 @@ from aisecurity.generated_openapi_client.models.ai_profile import AiProfile
 from aisecurity.generated_openapi_client.models.async_scan_object import AsyncScanObject
 from aisecurity.generated_openapi_client.models.async_scan_response import AsyncScanResponse
 from aisecurity.generated_openapi_client.models.cg_report_object import CgReportObject
+from aisecurity.generated_openapi_client.models.cmd_entry_object import CmdEntryObject
 from aisecurity.generated_openapi_client.models.ds_detail_result_object import DSDetailResultObject
 from aisecurity.generated_openapi_client.models.ds_result_metadata import DSResultMetadata
 from aisecurity.generated_openapi_client.models.dbs_entry_object import DbsEntryObject
@@ -42,6 +43,7 @@ from aisecurity.generated_openapi_client.models.dlp_pattern_detections_object im
 from aisecurity.generated_openapi_client.models.dlp_report_object import DlpReportObject
 from aisecurity.generated_openapi_client.models.error import Error
 from aisecurity.generated_openapi_client.models.io_detected import IODetected
+from aisecurity.generated_openapi_client.models.malware_report_object import MalwareReportObject
 from aisecurity.generated_openapi_client.models.masked_data import MaskedData
 from aisecurity.generated_openapi_client.models.mc_entry_object import McEntryObject
 from aisecurity.generated_openapi_client.models.mc_report_object import McReportObject

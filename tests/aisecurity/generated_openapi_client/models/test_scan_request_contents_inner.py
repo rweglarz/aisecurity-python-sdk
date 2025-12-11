@@ -57,8 +57,8 @@ class TestScanRequestContentsInner(unittest.TestCase):
                 tool_event = aisecurity.generated_openapi_client.models.tool_event.ToolEvent(
                     metadata = aisecurity.generated_openapi_client.models.tool_event_metadata.ToolEventMetadata(
                         ecosystem = 'mcp',
-                        method = 'tools/call',
-                        server_name = 'MCP server',
+                        method = 'tools/list',
+                        server_name = 'Internal MCP server',
                         tool_invoked = 'get_file', ),
                     input = '{"file_key":"abc123"}',
                     output = '{"content":[{"type":"text","text":"Fetched file"}]}', )
