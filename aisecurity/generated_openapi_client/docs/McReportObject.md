@@ -5,9 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**verdict** | **str** | Detection service verdict such as \&quot;malicious\&quot; or \&quot;benign\&quot; | [optional] 
-**code_analysis_by_type** | [**List[McEntryObject]**](McEntryObject.md) |  | [optional] 
 **all_code_blocks** | **List[str]** |  | [optional] 
+**code_analysis_by_type** | [**List[McEntryObject]**](McEntryObject.md) |  | [optional] 
+**verdict** | **str** | Detection service verdict such as \&quot;malicious\&quot; or \&quot;benign\&quot; | [optional] 
+**malware_script_report** | [**MalwareReportObject**](MalwareReportObject.md) |  | [optional] 
+**command_injection_report** | [**List[CmdEntryObject]**](CmdEntryObject.md) |  | [optional] 
 
 ## Example
 

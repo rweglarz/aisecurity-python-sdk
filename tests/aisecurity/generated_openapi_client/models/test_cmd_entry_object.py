@@ -27,11 +27,11 @@ Do not edit the class manually.
 
 import unittest
 
-from aisecurity.generated_openapi_client.models.tool_event import ToolEvent
+from aisecurity.generated_openapi_client.models.cmd_entry_object import CmdEntryObject
 
 
-class TestToolEvent(unittest.TestCase):
-    """ToolEvent unit test stubs"""
+class TestCmdEntryObject(unittest.TestCase):
+    """CmdEntryObject unit test stubs"""
 
     def setUp(self):
         pass
@@ -39,31 +39,26 @@ class TestToolEvent(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> ToolEvent:
-        """Test ToolEvent
+    def make_instance(self, include_optional) -> CmdEntryObject:
+        """Test CmdEntryObject
         include_optional is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # uncomment below to create an instance of `ToolEvent`
+        # uncomment below to create an instance of `CmdEntryObject`
         """
-        model = ToolEvent()
+        model = CmdEntryObject()
         if include_optional:
-            return ToolEvent(
-                metadata = aisecurity.generated_openapi_client.models.tool_event_metadata.ToolEventMetadata(
-                    ecosystem = 'mcp',
-                    method = 'tools/list',
-                    server_name = 'Internal MCP server',
-                    tool_invoked = 'get_file', ),
-                input = '{"file_key":"abc123"}',
-                output = '{"content":[{"type":"text","text":"Fetched file"}]}'
+            return CmdEntryObject(
+                code_block = '',
+                verdict = ''
             )
         else:
-            return ToolEvent(
+            return CmdEntryObject(
         )
         """
 
-    def testToolEvent(self):
-        """Test ToolEvent"""
+    def testCmdEntryObject(self):
+        """Test CmdEntryObject"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

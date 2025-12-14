@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ecosystem** | **str** |  | 
-**method** | **str** |  | 
-**server_name** | **str** |  | 
-**tool_invoked** | **str** |  | [optional] 
+**ecosystem** | **str** | Ecosystem or protocol of the tool | 
+**method** | **str** | Method type of the tool event | 
+**server_name** | **str** | Name of the MCP server | 
+**tool_invoked** | **str** | Name of the tool | [optional] 
 
 ## Example
 

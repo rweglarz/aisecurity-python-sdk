@@ -106,8 +106,8 @@ class TestScanIdResult(unittest.TestCase):
                         verdict = 'malicious',
                         metadata = aisecurity.generated_openapi_client.models.tool_event_metadata.ToolEventMetadata(
                             ecosystem = 'mcp',
-                            method = 'tools/call',
-                            server_name = 'MCP server',
+                            method = 'tools/list',
+                            server_name = 'Internal MCP server',
                             tool_invoked = 'get_file', ),
                         summary = aisecurity.generated_openapi_client.models.scan_summary.ScanSummary(
                             detections = aisecurity.generated_openapi_client.models.tool_detection_flags.ToolDetectionFlags(

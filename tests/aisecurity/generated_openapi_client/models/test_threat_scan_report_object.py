@@ -111,14 +111,21 @@ class TestThreatScanReportObject(unittest.TestCase):
                                 confidence = '',
                                 verdict = '', ),
                             mc_report = aisecurity.generated_openapi_client.models.mc_report_object.McReportObject(
-                                verdict = '',
+                                all_code_blocks = [
+                                    ''
+                                    ],
                                 code_analysis_by_type = [
                                     aisecurity.generated_openapi_client.models.mc_entry_object.McEntryObject(
                                         file_type = '',
                                         code_sha256 = '', )
                                     ],
-                                all_code_blocks = [
-                                    ''
+                                verdict = '',
+                                malware_script_report = aisecurity.generated_openapi_client.models.malware_report_object.MalwareReportObject(
+                                    verdict = '', ),
+                                command_injection_report = [
+                                    aisecurity.generated_openapi_client.models.cmd_entry_object.CmdEntryObject(
+                                        code_block = '',
+                                        verdict = '', )
                                     ], ),
                             agent_report = aisecurity.generated_openapi_client.models.agent_report_object.AgentReportObject(
                                 model_verdict = '',

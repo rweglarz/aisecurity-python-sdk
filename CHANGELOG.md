@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0.5.post2 (2025-12-01)
+   1. CMD Injection + Encoded Content Detection Changes
+
+## 0.7.0.5.post2 (2025-10-25)
+   1. MCP Threat Detections: Context Poisoning via Tool Schema/Input/Output Manipulation, and Exposed Credentials & Identity Leakage
+   2. Added Session ID for tracking session views
+
 ## 0.6.0.5.post2 (2025-08-05)
 1. **Updated Scan API Object with following Detection Services**:
    1. API Metadata Field: User IP
