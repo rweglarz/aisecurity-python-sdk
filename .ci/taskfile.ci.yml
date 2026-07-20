@@ -17,7 +17,6 @@ tasks:
         --tb=short
         --override-ini=cache_dir=${PYTEST_CACHE_DIR:-.cache/pytest}
         --junit-xml=reports/coverage.xml
-        --numprocesses=auto
         --cov=aisecurity --cov=tests
         --cov-report=term-missing
         --ignore=tests/aisecurity/{functional,performance}

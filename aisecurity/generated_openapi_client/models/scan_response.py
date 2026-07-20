@@ -31,8 +31,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from aisecurity.generated_openapi_client.models.content_errors import ContentErrors
 from aisecurity.generated_openapi_client.models.masked_data import MaskedData
 from aisecurity.generated_openapi_client.models.prompt_detected import PromptDetected
 from aisecurity.generated_openapi_client.models.prompt_detection_details import PromptDetectionDetails
@@ -55,11 +56,14 @@ class ScanResponse(BaseModel):
     scan_id: StrictStr = Field(description="Unique identifier for the scan")
     tr_id: Optional[StrictStr] = Field(default=None, description="Unique identifier for the transaction")
     session_id: Optional[StrictStr] = Field(default=None, description="Unique identifier for tracking Sessions")
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Unique identifier for the transaction")
     profile_id: Optional[StrictStr] = Field(
         default=None, description="Unique identifier of the AI security profile used for scanning"
     )
     profile_name: Optional[StrictStr] = Field(default=None, description="AI security profile name used for scanning")
-    category: StrictStr = Field(description='Category of the scanned content verdicts such as "malicious" or "benign"')
+    category: StrictStr = Field(
+        description='Category of the scanned content verdicts such as "malicious", "benign", "error" or "timeout"'
+    )
     action: StrictStr = Field(
         description='The action is set to "block" or "allow" based on AI security profile used for scanning'
     )
@@ -72,12 +76,18 @@ class ScanResponse(BaseModel):
     tool_detected: Optional[ToolDetected] = None
     created_at: Optional[datetime] = Field(default=None, description="Scan request timestamp")
     completed_at: Optional[datetime] = Field(default=None, description="Scan completion timestamp")
+    timeout: StrictBool = Field(description="Indicates whether any detection service timed out during scanning")
+    error: StrictBool = Field(
+        description="Indicates whether any detection service encountered an error during scanning"
+    )
+    errors: List[ContentErrors] = Field(description="List of detection service errors or timeouts")
     __properties: ClassVar[List[str]] = [
         "source",
         "report_id",
         "scan_id",
         "tr_id",
         "session_id",
+        "transaction_id",
         "profile_id",
         "profile_name",
         "category",
@@ -91,6 +101,9 @@ class ScanResponse(BaseModel):
         "tool_detected",
         "created_at",
         "completed_at",
+        "timeout",
+        "error",
+        "errors",
     ]
 
     model_config = ConfigDict(
@@ -151,6 +164,13 @@ class ScanResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of tool_detected
         if self.tool_detected:
             _dict["tool_detected"] = self.tool_detected.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in errors (list)
+        _items = []
+        if self.errors:
+            for _item_errors in self.errors:
+                if _item_errors:
+                    _items.append(_item_errors.to_dict())
+            _dict["errors"] = _items
         return _dict
 
     @classmethod
@@ -168,6 +188,7 @@ class ScanResponse(BaseModel):
             "scan_id": obj.get("scan_id"),
             "tr_id": obj.get("tr_id"),
             "session_id": obj.get("session_id"),
+            "transaction_id": obj.get("transaction_id"),
             "profile_id": obj.get("profile_id"),
             "profile_name": obj.get("profile_name"),
             "category": obj.get("category"),
@@ -195,5 +216,10 @@ class ScanResponse(BaseModel):
             else None,
             "created_at": obj.get("created_at"),
             "completed_at": obj.get("completed_at"),
+            "timeout": obj.get("timeout"),
+            "error": obj.get("error"),
+            "errors": [ContentErrors.from_dict(_item) for _item in obj["errors"]]
+            if obj.get("errors") is not None
+            else None,
         })
         return _obj

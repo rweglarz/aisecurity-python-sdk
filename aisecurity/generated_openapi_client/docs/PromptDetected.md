@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **malicious_code** | **bool** | Indicates whether prompt contains any malicious code | [optional] 
 **agent** | **bool** | Indicates whether prompt contains any Agent related threats | [optional] 
 **topic_violation** | **bool** | Indicates whether prompt contains any content violates topic guardrails | [optional] 
+**source_code** | **bool** | Indicates whether prompt contains any source code | [optional] 
 
 ## Example
 

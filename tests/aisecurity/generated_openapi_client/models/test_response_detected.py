@@ -56,7 +56,8 @@ class TestResponseDetected(unittest.TestCase):
                 malicious_code = True,
                 agent = True,
                 ungrounded = True,
-                topic_violation = True
+                topic_violation = True,
+                source_code = True
             )
         else:
             return ResponseDetected(

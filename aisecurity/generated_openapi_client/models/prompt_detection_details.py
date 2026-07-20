@@ -33,6 +33,7 @@ import json
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from aisecurity.generated_openapi_client.models.topic_guard_rails import TopicGuardRails
+from aisecurity.generated_openapi_client.models.toxic_content_details import ToxicContentDetails
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -43,7 +44,8 @@ class PromptDetectionDetails(BaseModel):
     """  # noqa: E501
 
     topic_guardrails_details: Optional[TopicGuardRails] = None
-    __properties: ClassVar[List[str]] = ["topic_guardrails_details"]
+    toxic_content_details: Optional[ToxicContentDetails] = None
+    __properties: ClassVar[List[str]] = ["topic_guardrails_details", "toxic_content_details"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,6 +87,9 @@ class PromptDetectionDetails(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of topic_guardrails_details
         if self.topic_guardrails_details:
             _dict["topic_guardrails_details"] = self.topic_guardrails_details.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of toxic_content_details
+        if self.toxic_content_details:
+            _dict["toxic_content_details"] = self.toxic_content_details.to_dict()
         return _dict
 
     @classmethod
@@ -99,6 +104,9 @@ class PromptDetectionDetails(BaseModel):
         _obj = cls.model_validate({
             "topic_guardrails_details": TopicGuardRails.from_dict(obj["topic_guardrails_details"])
             if obj.get("topic_guardrails_details") is not None
-            else None
+            else None,
+            "toxic_content_details": ToxicContentDetails.from_dict(obj["toxic_content_details"])
+            if obj.get("toxic_content_details") is not None
+            else None,
         })
         return _obj

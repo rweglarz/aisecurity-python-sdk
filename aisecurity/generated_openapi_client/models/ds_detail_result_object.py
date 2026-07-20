@@ -30,13 +30,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from aisecurity.generated_openapi_client.models.agent_report_object import AgentReportObject
 from aisecurity.generated_openapi_client.models.cg_report_object import CgReportObject
 from aisecurity.generated_openapi_client.models.dbs_entry_object import DbsEntryObject
 from aisecurity.generated_openapi_client.models.dlp_report_object import DlpReportObject
+from aisecurity.generated_openapi_client.models.dlp_snippet_object import DlpSnippetObject
 from aisecurity.generated_openapi_client.models.mc_report_object import McReportObject
+from aisecurity.generated_openapi_client.models.pi_report_object import PiReportObject
+from aisecurity.generated_openapi_client.models.source_code_report_object import SourceCodeReportObject
 from aisecurity.generated_openapi_client.models.tc_report_object import TcReportObject
 from aisecurity.generated_openapi_client.models.tg_report_object import TgReportObject
 from aisecurity.generated_openapi_client.models.urlf_entry_object import UrlfEntryObject
@@ -51,8 +55,23 @@ class DSDetailResultObject(BaseModel):
 
     urlf_report: Optional[List[UrlfEntryObject]] = None
     dlp_report: Optional[DlpReportObject] = None
+    dlp_snippets: Optional[DlpSnippetObject] = None
+    pi_report: Optional[PiReportObject] = None
+    pi_snippets: Optional[
+        Annotated[List[Annotated[str, Field(strict=True, max_length=1000)]], Field(max_length=10)]
+    ] = Field(default=None, description="Up to 10 content snippets; each item must be <= 1000 characters.")
     dbs_report: Optional[List[DbsEntryObject]] = None
+    dbs_snippets: Optional[
+        Annotated[List[Annotated[str, Field(strict=True, max_length=1000)]], Field(max_length=10)]
+    ] = Field(default=None, description="Up to 10 content snippets; each item must be <= 1000 characters.")
     tc_report: Optional[TcReportObject] = None
+    tc_snippets: Optional[
+        Annotated[List[Annotated[str, Field(strict=True, max_length=1000)]], Field(max_length=10)]
+    ] = Field(default=None, description="Up to 10 content snippets; each item must be <= 1000 characters.")
+    source_code_snippets: Optional[
+        Annotated[List[Annotated[str, Field(strict=True, max_length=1000)]], Field(max_length=10)]
+    ] = Field(default=None, description="Up to 10 content snippets; each item must be <= 1000 characters.")
+    source_code_report: Optional[SourceCodeReportObject] = None
     mc_report: Optional[McReportObject] = None
     agent_report: Optional[AgentReportObject] = None
     topic_guardrails_report: Optional[TgReportObject] = None
@@ -60,8 +79,15 @@ class DSDetailResultObject(BaseModel):
     __properties: ClassVar[List[str]] = [
         "urlf_report",
         "dlp_report",
+        "dlp_snippets",
+        "pi_report",
+        "pi_snippets",
         "dbs_report",
+        "dbs_snippets",
         "tc_report",
+        "tc_snippets",
+        "source_code_snippets",
+        "source_code_report",
         "mc_report",
         "agent_report",
         "topic_guardrails_report",
@@ -115,6 +141,12 @@ class DSDetailResultObject(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of dlp_report
         if self.dlp_report:
             _dict["dlp_report"] = self.dlp_report.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of dlp_snippets
+        if self.dlp_snippets:
+            _dict["dlp_snippets"] = self.dlp_snippets.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of pi_report
+        if self.pi_report:
+            _dict["pi_report"] = self.pi_report.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in dbs_report (list)
         _items = []
         if self.dbs_report:
@@ -125,6 +157,9 @@ class DSDetailResultObject(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of tc_report
         if self.tc_report:
             _dict["tc_report"] = self.tc_report.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of source_code_report
+        if self.source_code_report:
+            _dict["source_code_report"] = self.source_code_report.to_dict()
         # override the default output from pydantic by calling `to_dict()` of mc_report
         if self.mc_report:
             _dict["mc_report"] = self.mc_report.to_dict()
@@ -153,10 +188,21 @@ class DSDetailResultObject(BaseModel):
             if obj.get("urlf_report") is not None
             else None,
             "dlp_report": DlpReportObject.from_dict(obj["dlp_report"]) if obj.get("dlp_report") is not None else None,
+            "dlp_snippets": DlpSnippetObject.from_dict(obj["dlp_snippets"])
+            if obj.get("dlp_snippets") is not None
+            else None,
+            "pi_report": PiReportObject.from_dict(obj["pi_report"]) if obj.get("pi_report") is not None else None,
+            "pi_snippets": obj.get("pi_snippets"),
             "dbs_report": [DbsEntryObject.from_dict(_item) for _item in obj["dbs_report"]]
             if obj.get("dbs_report") is not None
             else None,
+            "dbs_snippets": obj.get("dbs_snippets"),
             "tc_report": TcReportObject.from_dict(obj["tc_report"]) if obj.get("tc_report") is not None else None,
+            "tc_snippets": obj.get("tc_snippets"),
+            "source_code_snippets": obj.get("source_code_snippets"),
+            "source_code_report": SourceCodeReportObject.from_dict(obj["source_code_report"])
+            if obj.get("source_code_report") is not None
+            else None,
             "mc_report": McReportObject.from_dict(obj["mc_report"]) if obj.get("mc_report") is not None else None,
             "agent_report": AgentReportObject.from_dict(obj["agent_report"])
             if obj.get("agent_report") is not None

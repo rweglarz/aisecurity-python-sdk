@@ -23,9 +23,9 @@ import aiohttp
 from aisecurity.exceptions import AISecSDKException, ErrorType
 from aisecurity.generated_openapi_client import AiProfile, Metadata, ScanResponse
 from aisecurity.generated_openapi_client.asyncio.exceptions import ApiException
-from aisecurity.scan.asyncio.scan_executor import ScanExecutor
-from aisecurity.generated_openapi_client.models.tool_event import ToolEvent
 from aisecurity.generated_openapi_client.models.tool_detected import ToolDetected
+from aisecurity.generated_openapi_client.models.tool_event import ToolEvent
+from aisecurity.scan.asyncio.scan_executor import ScanExecutor
 from aisecurity.scan.models.content import Content
 
 
@@ -47,6 +47,9 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
             tr_id="session_id",
             session_id="session_id",
             tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
         )
         mock_sync_scan_api.scan_sync_request.return_value = mock_sync_scan_response
 
@@ -65,7 +68,14 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         # Act
-        result = await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+        result = await self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=None,
+            metadata=metadata,
+        )
 
         # Assert
         self.assertIsInstance(result, ScanResponse)
@@ -73,6 +83,59 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.session_id, "session_id")
         self.assertEqual(result.tr_id, "session_id")
         mock_sync_scan_api.scan_sync_request.assert_called_once()
+
+    @patch(
+        "aisecurity.scan.asyncio.scan_executor.ScanApiBase.scan_api",
+        new_callable=AsyncMock,
+    )
+    async def test_sync_request_with_transaction_id(self, mock_sync_scan_api):
+        mock_sync_scan_response = ScanResponse(
+            report_id="REP12345678910",
+            scan_id="test_id_txn",
+            category="malign",
+            action="block",
+            tr_id="tr_5678",
+            session_id="session_5678",
+            tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
+        )
+        mock_sync_scan_api.scan_sync_request.return_value = mock_sync_scan_response
+
+        # Arrange
+        content = Content(
+            prompt="Test prompt with transaction",
+            response="Test response with transaction",
+        )
+        ai_profile = AiProfile(profile_id="txn_test_profile")
+        tr_id = "tr_5678"
+        session_id = "session_5678"
+        transaction_id = "txn_xyz789"
+        metadata = Metadata(app_name="txn_app", app_user="txn_user", ai_model="txn_model")
+
+        # Act
+        result = await self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=transaction_id,
+            metadata=metadata,
+        )
+
+        # Assert
+        self.assertIsInstance(result, ScanResponse)
+        self.assertEqual(result.scan_id, "test_id_txn")
+        mock_sync_scan_api.scan_sync_request.assert_called_once()
+
+        # Verify transaction_id was passed in the ScanRequest
+        call_args = mock_sync_scan_api.scan_sync_request.call_args
+        scan_request = call_args.kwargs["scan_request"]
+        self.assertEqual(scan_request.transaction_id, transaction_id)
+        self.assertEqual(scan_request.tr_id, tr_id)
+        self.assertEqual(scan_request.session_id, session_id)
+        self.assertEqual(scan_request.metadata, metadata)
 
     # @pytest.mark.urllib3
     @patch(
@@ -89,7 +152,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(Exception) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("API Error" in str(context.exception))
         mock_sync_scan_api.scan_sync_request.assert_called_once()
@@ -109,7 +172,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("401" in str(context.exception))
         self.assertTrue("Unauthorized" in str(context.exception))
@@ -133,7 +196,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("403" in str(context.exception))
         self.assertTrue("Forbidden" in str(context.exception))
@@ -153,7 +216,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("500" in str(context.exception))
         self.assertTrue("Internal Server Error" in str(context.exception))
@@ -173,7 +236,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("Invalid URL" in str(context.exception))
         self.assertEqual(ErrorType.CLIENT_SIDE_ERROR, context.exception.error_type)
@@ -192,7 +255,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("Request timed out" in str(context.exception))
         self.assertEqual(ErrorType.CLIENT_SIDE_ERROR, context.exception.error_type)
@@ -216,7 +279,7 @@ class TestScanExecutor(unittest.IsolatedAsyncioTestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            await self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, None, metadata)
 
         self.assertTrue("400" in str(context.exception))
         self.assertTrue("Bad request" in str(context.exception))

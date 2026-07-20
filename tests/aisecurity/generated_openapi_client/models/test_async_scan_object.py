@@ -53,6 +53,7 @@ class TestAsyncScanObject(unittest.TestCase):
                 scan_req = aisecurity.generated_openapi_client.models.scan_request.ScanRequest(
                     tr_id = '',
                     session_id = '',
+                    transaction_id = '',
                     ai_profile = aisecurity.generated_openapi_client.models.ai_profile.AiProfile(
                         profile_id = '',
                         profile_name = '', ),
@@ -66,7 +67,7 @@ class TestAsyncScanObject(unittest.TestCase):
                             agent_version = '',
                             agent_arn = '', ), ),
                     contents = [
-                        aisecurity.generated_openapi_client.models.scan_request_contents_inner.ScanRequest_contents_inner(
+                        aisecurity.generated_openapi_client.models.scan_request_contents_inner.ScanRequestContentsInner(
                             prompt = '',
                             response = '',
                             code_prompt = '',
@@ -83,6 +84,7 @@ class TestAsyncScanObject(unittest.TestCase):
                 scan_req = aisecurity.generated_openapi_client.models.scan_request.ScanRequest(
                     tr_id = '',
                     session_id = '',
+                    transaction_id = '',
                     ai_profile = aisecurity.generated_openapi_client.models.ai_profile.AiProfile(
                         profile_id = '',
                         profile_name = '', ),
@@ -96,7 +98,7 @@ class TestAsyncScanObject(unittest.TestCase):
                             agent_version = '',
                             agent_arn = '', ), ),
                     contents = [
-                        aisecurity.generated_openapi_client.models.scan_request_contents_inner.ScanRequest_contents_inner(
+                        aisecurity.generated_openapi_client.models.scan_request_contents_inner.ScanRequestContentsInner(
                             prompt = '',
                             response = '',
                             code_prompt = '',

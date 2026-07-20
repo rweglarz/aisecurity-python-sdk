@@ -59,6 +59,7 @@ class TestScanIdResult(unittest.TestCase):
                     scan_id = '',
                     tr_id = '',
                     session_id = '',
+                    transaction_id = '',
                     profile_id = '',
                     profile_name = '',
                     category = '',
@@ -70,7 +71,8 @@ class TestScanIdResult(unittest.TestCase):
                         toxic_content = True,
                         malicious_code = True,
                         agent = True,
-                        topic_violation = True, ),
+                        topic_violation = True,
+                        source_code = True, ),
                     response_detected = aisecurity.generated_openapi_client.models.response_detected.ResponseDetected(
                         url_cats = True,
                         dlp = True,
@@ -79,7 +81,8 @@ class TestScanIdResult(unittest.TestCase):
                         malicious_code = True,
                         agent = True,
                         ungrounded = True,
-                        topic_violation = True, ),
+                        topic_violation = True,
+                        source_code = True, ),
                     prompt_masked_data = aisecurity.generated_openapi_client.models.masked_data.MaskedData(
                         data = '',
                         pattern_detections = [
@@ -100,6 +103,10 @@ class TestScanIdResult(unittest.TestCase):
                                 ],
                             blocked_topics = [
                                 ''
+                                ], ),
+                        toxic_content_details = aisecurity.generated_openapi_client.models.toxic_content_details.ToxicContentDetails(
+                            toxic_categories = [
+                                ''
                                 ], ), ),
                     response_detection_details = aisecurity.generated_openapi_client.models.response_detection_details.ResponseDetectionDetails(),
                     tool_detected = aisecurity.generated_openapi_client.models.tool_detected.ToolDetected(
@@ -118,7 +125,8 @@ class TestScanIdResult(unittest.TestCase):
                                 toxic_content = True,
                                 malicious_code = True,
                                 agent = True,
-                                topic_violation = True, ),
+                                topic_violation = True,
+                                source_code = True, ),
                             threats = ["credential leakage","context poisoning"], ),
                         input_detected = aisecurity.generated_openapi_client.models.io_detected.IODetected(
                             detection_entries = [
@@ -130,7 +138,15 @@ class TestScanIdResult(unittest.TestCase):
                                 ], ),
                         output_detected = aisecurity.generated_openapi_client.models.io_detected.IODetected(), ),
                     created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                    completed_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), )
+                    completed_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                    timeout = True,
+                    error = True,
+                    errors = [
+                        aisecurity.generated_openapi_client.models.content_errors.ContentErrors(
+                            content_type = 'prompt',
+                            feature = 'dlp',
+                            status = 'error', )
+                        ], )
             )
         else:
             return ScanIdResult(

@@ -4,7 +4,7 @@
 [project]
 name = "pan-aisecurity"
 description = "Palo Alto Networks AI Runtime Security: API Intercept Python SDK"
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 authors = [
   { name = "Palo Alto Networks AI Runtime Security SDK Team", email = "dl-airs-api-sdk@paloaltonetworks.com" },
 ]
@@ -173,7 +173,9 @@ append-line = "__version__ = \"{version}\""
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-ra -q --numprocesses=auto --cov=aisecurity --cov=tests --cov-report=term-missing"
+# Note: --numprocesses is controlled by taskfile/CI to avoid pytest-xdist+asyncio issues
+# Note: Coverage flags are in CI taskfile and local test tasks, not here to avoid double instrumentation
+addopts = "-ra -q"
 testpaths = [
   "tests",
   "examples",
@@ -202,11 +204,11 @@ pip = "{env:HATCH_UV} pip {args}"
 [[tool.hatch.envs.hatch-test.matrix]]
 # https://devguide.python.org/versions/
 python = [
-  "3.9",
   "3.10",
   "3.11",
   "3.12",
   "3.13",
+  "3.14",
 ]
 
 [tool.hatch.envs.full-test.scripts]

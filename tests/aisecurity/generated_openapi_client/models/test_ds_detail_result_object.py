@@ -82,15 +82,46 @@ class TestDSDetailResultObject(unittest.TestCase):
                                 ],
                             low_confidence_detections = , )
                         ], ),
+                dlp_snippets = aisecurity.generated_openapi_client.models.dlp_snippet_object.DlpSnippetObject(
+                    meta = aisecurity.generated_openapi_client.models.dlp_snippet_meta.DlpSnippetMeta(
+                        data_pattern = '',
+                        confidence_level = 'low',
+                        data_pattern_type = '',
+                        occurrence = 56, ),
+                    snippets = [
+                        ''
+                        ], ),
+                pi_report = aisecurity.generated_openapi_client.models.pi_report_object.PiReportObject(
+                    verdict = '', ),
+                pi_snippets = [
+                    ''
+                    ],
                 dbs_report = [
                     aisecurity.generated_openapi_client.models.dbs_entry_object.DbsEntryObject(
                         sub_type = '',
                         verdict = '',
                         action = '', )
                     ],
+                dbs_snippets = [
+                    ''
+                    ],
                 tc_report = aisecurity.generated_openapi_client.models.tc_report_object.TcReportObject(
                     confidence = '',
-                    verdict = '', ),
+                    verdict = '',
+                    toxic_categories = [
+                        ''
+                        ], ),
+                tc_snippets = [
+                    ''
+                    ],
+                source_code_snippets = [
+                    ''
+                    ],
+                source_code_report = aisecurity.generated_openapi_client.models.source_code_report_object.SourceCodeReportObject(
+                    verdict = '',
+                    confidence_score = 1.337,
+                    code_present = True,
+                    category = '', ),
                 mc_report = aisecurity.generated_openapi_client.models.mc_report_object.McReportObject(
                     all_code_blocks = [
                         ''
@@ -107,7 +138,12 @@ class TestDSDetailResultObject(unittest.TestCase):
                         aisecurity.generated_openapi_client.models.cmd_entry_object.CmdEntryObject(
                             code_block = '',
                             verdict = '', )
-                        ], ),
+                        ],
+                    truncation_info = aisecurity.generated_openapi_client.models.truncation_info_object.TruncationInfoObject(
+                        payload_truncated = True,
+                        original_payload_length = 56,
+                        truncated_payload_length = 56,
+                        truncation_mode = 'tail', ), ),
                 agent_report = aisecurity.generated_openapi_client.models.agent_report_object.AgentReportObject(
                     model_verdict = '',
                     agent_framework = '',

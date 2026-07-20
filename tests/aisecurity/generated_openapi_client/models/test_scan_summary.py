@@ -57,7 +57,8 @@ class TestScanSummary(unittest.TestCase):
                     toxic_content = True,
                     malicious_code = True,
                     agent = True,
-                    topic_violation = True, ),
+                    topic_violation = True,
+                    source_code = True, ),
                 threats = ["credential leakage","context poisoning"]
             )
         else:
@@ -70,7 +71,8 @@ class TestScanSummary(unittest.TestCase):
                     toxic_content = True,
                     malicious_code = True,
                     agent = True,
-                    topic_violation = True, ),
+                    topic_violation = True,
+                    source_code = True, ),
                 threats = ["credential leakage","context poisoning"],
         )
         """

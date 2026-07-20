@@ -35,6 +35,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from aisecurity.generated_openapi_client.models.cmd_entry_object import CmdEntryObject
 from aisecurity.generated_openapi_client.models.malware_report_object import MalwareReportObject
 from aisecurity.generated_openapi_client.models.mc_entry_object import McEntryObject
+from aisecurity.generated_openapi_client.models.truncation_info_object import TruncationInfoObject
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -51,12 +52,14 @@ class McReportObject(BaseModel):
     )
     malware_script_report: Optional[MalwareReportObject] = None
     command_injection_report: Optional[List[CmdEntryObject]] = None
+    truncation_info: Optional[TruncationInfoObject] = None
     __properties: ClassVar[List[str]] = [
         "all_code_blocks",
         "code_analysis_by_type",
         "verdict",
         "malware_script_report",
         "command_injection_report",
+        "truncation_info",
     ]
 
     model_config = ConfigDict(
@@ -113,6 +116,9 @@ class McReportObject(BaseModel):
                 if _item_command_injection_report:
                     _items.append(_item_command_injection_report.to_dict())
             _dict["command_injection_report"] = _items
+        # override the default output from pydantic by calling `to_dict()` of truncation_info
+        if self.truncation_info:
+            _dict["truncation_info"] = self.truncation_info.to_dict()
         return _dict
 
     @classmethod
@@ -135,6 +141,9 @@ class McReportObject(BaseModel):
             else None,
             "command_injection_report": [CmdEntryObject.from_dict(_item) for _item in obj["command_injection_report"]]
             if obj.get("command_injection_report") is not None
+            else None,
+            "truncation_info": TruncationInfoObject.from_dict(obj["truncation_info"])
+            if obj.get("truncation_info") is not None
             else None,
         })
         return _obj

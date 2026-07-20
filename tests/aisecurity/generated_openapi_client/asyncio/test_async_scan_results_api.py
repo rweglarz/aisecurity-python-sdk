@@ -67,6 +67,9 @@ class TestScanResultsApi(unittest.IsolatedAsyncioTestCase):
                 response_detected=ResponseDetected(url_cats=False, dlp=False),
                 created_at=datetime.now(timezone.utc),
                 completed_at=datetime.now(timezone.utc),
+                timeout=False,
+                error=False,
+                errors=[],
             )
 
         def create_mock_scan_id_result(req_id, scan_id):

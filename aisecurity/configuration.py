@@ -16,7 +16,6 @@
 
 import os
 import warnings
-from typing import Optional
 
 from aisecurity.constants.base import (
     AI_SEC_API_ENDPOINT,
@@ -30,6 +29,12 @@ from aisecurity.constants.base import (
 from aisecurity.exceptions import AISecSDKException, ErrorType
 from aisecurity.logger import BaseLogger
 
+if not (isinstance(DEFAULT_ENDPOINT, str) and DEFAULT_ENDPOINT.startswith("https://")):
+    raise AISecSDKException(
+        f"aisecurity.constants.base.DEFAULT_ENDPOINT must be an https:// URL (got: {DEFAULT_ENDPOINT!r})",
+        ErrorType.AISEC_SDK_ERROR,
+    )
+
 
 class _Configuration(BaseLogger):
     def __init__(self):
@@ -42,10 +47,10 @@ class _Configuration(BaseLogger):
     def init(
         self,
         *,
-        api_key: Optional[str] = None,
-        api_token: Optional[str] = None,
-        api_endpoint: Optional[str] = None,
-        num_retries: Optional[int] = None,
+        api_key: str | None = None,
+        api_token: str | None = None,
+        api_endpoint: str | None = None,
+        num_retries: int | None = None,
     ):
         if api_endpoint:
             self.api_endpoint = api_endpoint
@@ -83,7 +88,19 @@ class _Configuration(BaseLogger):
     def api_endpoint(self, value):
         if value is None:
             value = DEFAULT_ENDPOINT
-        self._api_endpoint = value
+        if not isinstance(value, str):
+            self._log_and_raise(
+                "api_endpoint must be a string starting with https://",
+                ErrorType.AISEC_SDK_ERROR,
+            )
+        normalised = value.strip()
+        if not normalised.lower().startswith("https://"):
+            scheme = normalised.split("://", 1)[0] if "://" in normalised else "<none>"
+            self._log_and_raise(
+                f"api_endpoint must use the https:// scheme to protect credentials in transit (got scheme={scheme!r})",
+                ErrorType.AISEC_SDK_ERROR,
+            )
+        self._api_endpoint = normalised
         self.logger.info(f"event={self.init.__name__} api_endpoint={self._api_endpoint} action=set")
 
     @property
@@ -108,7 +125,7 @@ class _Configuration(BaseLogger):
 
         self._api_key = value
         self.logger.info(f"event={self.init.__name__} api_key value configured action=set")
-        self.logger.debug(f"event={self.init.__name__} api_key_last8={self._api_key[:-8]}********* action=set")
+        self.logger.debug(f"event={self.init.__name__} api_key_last8=*********{self._api_key[-8:]} action=set")
 
     @property
     def num_retries(self):
@@ -150,7 +167,7 @@ class _Configuration(BaseLogger):
 
         self._api_token = value
         self.logger.info(f"event={self.init.__name__} api_token value configured action=set")
-        self.logger.debug(f"event={self.init.__name__} api_token_last8={self._api_token[:-8]}********* action=set")
+        self.logger.debug(f"event={self.init.__name__} api_token_last8=*********{self._api_token[-8:]} action=set")
 
     def reset(self):
         self._api_endpoint = DEFAULT_ENDPOINT

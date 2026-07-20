@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **agent** | **bool** | Indicates whether response contains any Agent related threats | [optional] 
 **ungrounded** | **bool** | Indicates whether response contains any ungrounded content | [optional] 
 **topic_violation** | **bool** | Indicates whether response contains any content violates topic guardrails | [optional] 
+**source_code** | **bool** | Indicates whether response contains any source code | [optional] 
 
 ## Example
 

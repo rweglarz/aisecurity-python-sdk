@@ -65,6 +65,9 @@ class ToolDetectionFlags(BaseModel):
     topic_violation: Optional[StrictBool] = Field(
         default=None, description="Indicates whether prompt contains any content violates topic guardrails"
     )
+    source_code: Optional[StrictBool] = Field(
+        default=None, description="Indicates whether response contains any source code"
+    )
     __properties: ClassVar[List[str]] = [
         "injection",
         "url_cats",
@@ -74,6 +77,7 @@ class ToolDetectionFlags(BaseModel):
         "malicious_code",
         "agent",
         "topic_violation",
+        "source_code",
     ]
 
     model_config = ConfigDict(
@@ -133,5 +137,6 @@ class ToolDetectionFlags(BaseModel):
             "malicious_code": obj.get("malicious_code"),
             "agent": obj.get("agent"),
             "topic_violation": obj.get("topic_violation"),
+            "source_code": obj.get("source_code"),
         })
         return _obj

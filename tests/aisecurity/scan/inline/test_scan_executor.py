@@ -24,10 +24,10 @@ from aisecurity.generated_openapi_client import (
     ScanResponse,
 )
 from aisecurity.generated_openapi_client.models.metadata import Metadata
+from aisecurity.generated_openapi_client.models.tool_detected import ToolDetected
+from aisecurity.generated_openapi_client.models.tool_event import ToolEvent
 from aisecurity.generated_openapi_client.urllib3.exceptions import ApiException
 from aisecurity.scan.inline.scan_executor import ScanExecutor
-from aisecurity.generated_openapi_client.models.tool_event import ToolEvent
-from aisecurity.generated_openapi_client.models.tool_detected import ToolDetected
 from aisecurity.scan.models.content import Content
 
 
@@ -46,6 +46,9 @@ class TestScanExecutor(unittest.TestCase):
             session_id="session_1234",
             tr_id="session_1234",
             tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
         )
 
         content = Content(
@@ -61,7 +64,14 @@ class TestScanExecutor(unittest.TestCase):
         session_id = "session_1234"
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
-        result = self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+        result = self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=None,
+            metadata=metadata,
+        )
 
         self.assertIsInstance(result, ScanResponse)
         mock_scan_api.scan_sync_request.assert_called_once()
@@ -92,6 +102,9 @@ class TestScanExecutor(unittest.TestCase):
             session_id="session_1234",
             tr_id="session_1234",
             tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
         )
 
         content = Content(prompt="Test prompt")
@@ -100,7 +113,14 @@ class TestScanExecutor(unittest.TestCase):
         session_id = "session_1234"
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
-        result = self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+        result = self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=None,
+            metadata=metadata,
+        )
 
         self.assertIsInstance(result, ScanResponse)
         mock_scan_api.scan_sync_request.assert_called_once()
@@ -116,6 +136,52 @@ class TestScanExecutor(unittest.TestCase):
         self.assertEqual(result.tr_id, "session_1234")
 
     @patch("aisecurity.scan.inline.scan_executor.ScanApiBase.scan_api")
+    def test_sync_request_with_transaction_id(self, mock_scan_api):
+        mock_scan_api.scan_sync_request = MagicMock()
+        mock_scan_api.scan_sync_request.return_value = ScanResponse(
+            report_id="REP12345678910",
+            scan_id="test_id",
+            category="malign",
+            action="block",
+            session_id="session_1234",
+            tr_id="tr_1234",
+            tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
+        )
+
+        content = Content(
+            prompt="Test prompt",
+            response="Test response",
+        )
+        ai_profile = AiProfile()
+        tr_id = "tr_1234"
+        session_id = "session_1234"
+        transaction_id = "txn_abc123"
+        metadata = Metadata(app_name="test_app", app_user="test_user", ai_model="test_model")
+
+        result = self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=transaction_id,
+            metadata=metadata,
+        )
+
+        self.assertIsInstance(result, ScanResponse)
+        mock_scan_api.scan_sync_request.assert_called_once()
+
+        call_args = mock_scan_api.scan_sync_request.call_args[1]["scan_request"]
+        self.assertIsInstance(call_args, ScanRequest)
+        self.assertEqual(call_args.tr_id, tr_id)
+        self.assertEqual(call_args.session_id, session_id)
+        self.assertEqual(call_args.transaction_id, transaction_id)
+        self.assertEqual(call_args.metadata, metadata)
+        self.assertEqual(call_args.ai_profile, ai_profile)
+
+    @patch("aisecurity.scan.inline.scan_executor.ScanApiBase.scan_api")
     def test_sync_request_success_for_only_response(self, mock_scan_api):
         mock_scan_api.scan_sync_request = MagicMock()
         mock_scan_api.scan_sync_request.return_value = ScanResponse(
@@ -126,6 +192,9 @@ class TestScanExecutor(unittest.TestCase):
             session_id="session_1234",
             tr_id="session_1234",
             tool_detected=ToolDetected(verdict="block"),
+            timeout=False,
+            error=False,
+            errors=[],
         )
         content = Content(response="Test response")
         ai_profile = AiProfile()
@@ -133,7 +202,14 @@ class TestScanExecutor(unittest.TestCase):
         session_id = "session_1234"
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
-        result = self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+        result = self.scan_executor.sync_request(
+            content=content,
+            ai_profile=ai_profile,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=None,
+            metadata=metadata,
+        )
 
         self.assertIsInstance(result, ScanResponse)
         mock_scan_api.scan_sync_request.assert_called_once()
@@ -158,7 +234,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException):
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         mock_logger.error.assert_called_once()
 
@@ -180,7 +263,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
         self.assertTrue("403" in str(context.exception))
         self.assertTrue("Forbidden" in str(context.exception))
         self.assertEqual(ErrorType.SERVER_SIDE_ERROR, context.exception.error_type)
@@ -196,7 +286,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
         self.assertTrue("401" in str(context.exception))
         self.assertTrue("Unauthorized" in str(context.exception))
         self.assertEqual(ErrorType.SERVER_SIDE_ERROR, context.exception.error_type)
@@ -212,7 +309,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         self.assertTrue("Network UnReachable" in str(context.exception))
         self.assertEqual(ErrorType.AISEC_SDK_ERROR, context.exception.error_type)
@@ -228,7 +332,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         self.assertTrue("500" in str(context.exception))
         self.assertTrue("Internal Server Error" in str(context.exception))
@@ -245,7 +356,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         self.assertTrue("Request timed out" in str(context.exception))
         self.assertEqual(ErrorType.AISEC_SDK_ERROR, context.exception.error_type)
@@ -265,7 +383,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         self.assertTrue("Invalid Type" in str(context.exception))
         self.assertEqual(ErrorType.AISEC_SDK_ERROR, context.exception.error_type)
@@ -281,7 +406,14 @@ class TestScanExecutor(unittest.TestCase):
         metadata = Metadata(app_name="1234", app_user="user", ai_model="model")
 
         with self.assertRaises(AISecSDKException) as context:
-            self.scan_executor.sync_request(content, ai_profile, tr_id, session_id, metadata)
+            self.scan_executor.sync_request(
+                content=content,
+                ai_profile=ai_profile,
+                tr_id=tr_id,
+                session_id=session_id,
+                transaction_id=None,
+                metadata=metadata,
+            )
 
         self.assertTrue("Invalid Value" in str(context.exception))
         self.assertEqual(ErrorType.AISEC_SDK_ERROR, context.exception.error_type)
