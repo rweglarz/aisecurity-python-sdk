@@ -64,7 +64,8 @@ class TestToolDetected(unittest.TestCase):
                         toxic_content = True,
                         malicious_code = True,
                         agent = True,
-                        topic_violation = True, ),
+                        topic_violation = True,
+                        source_code = True, ),
                     threats = ["credential leakage","context poisoning"], ),
                 input_detected = aisecurity.generated_openapi_client.models.io_detected.IODetected(
                     detection_entries = [
@@ -78,7 +79,8 @@ class TestToolDetected(unittest.TestCase):
                                 toxic_content = True,
                                 malicious_code = True,
                                 agent = True,
-                                topic_violation = True, ),
+                                topic_violation = True,
+                                source_code = True, ),
                             threats = ["credential leakage","context poisoning"],
                             details = aisecurity.generated_openapi_client.models.tool_detection_details.ToolDetectionDetails(
                                 topic_guardrails_details = aisecurity.generated_openapi_client.models.topic_guard_rails.TopicGuardRails(
@@ -112,7 +114,8 @@ class TestToolDetected(unittest.TestCase):
                                 toxic_content = True,
                                 malicious_code = True,
                                 agent = True,
-                                topic_violation = True, ),
+                                topic_violation = True,
+                                source_code = True, ),
                             threats = ["credential leakage","context poisoning"],
                             details = aisecurity.generated_openapi_client.models.tool_detection_details.ToolDetectionDetails(
                                 topic_guardrails_details = aisecurity.generated_openapi_client.models.topic_guard_rails.TopicGuardRails(

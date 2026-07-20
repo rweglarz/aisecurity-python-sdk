@@ -42,12 +42,15 @@ class TcReportObject(BaseModel):
     """  # noqa: E501
 
     confidence: Optional[StrictStr] = Field(
-        default=None, description='Confidence level of the threat classification (“high" and "moderate")'
+        default=None, description='Confidence level of the threat classification ("high" and "moderate")'
     )
     verdict: Optional[StrictStr] = Field(
         default=None, description='Detection service verdict such as "malicious" or "benign"'
     )
-    __properties: ClassVar[List[str]] = ["confidence", "verdict"]
+    toxic_categories: Optional[List[StrictStr]] = Field(
+        default=None, description="Indicates the list of topics that is detected"
+    )
+    __properties: ClassVar[List[str]] = ["confidence", "verdict", "toxic_categories"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -97,5 +100,9 @@ class TcReportObject(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({"confidence": obj.get("confidence"), "verdict": obj.get("verdict")})
+        _obj = cls.model_validate({
+            "confidence": obj.get("confidence"),
+            "verdict": obj.get("verdict"),
+            "toxic_categories": obj.get("toxic_categories"),
+        })
         return _obj

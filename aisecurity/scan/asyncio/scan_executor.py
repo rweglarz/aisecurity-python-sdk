@@ -13,7 +13,6 @@
 # or condition, and the licensor will not be liable to you for any damages
 # arising out of these terms or the use or nature of the software, under
 # any kind of legal claim.
-from typing import Optional
 
 import aiohttp
 from singleton_decorator import singleton
@@ -43,9 +42,10 @@ class ScanExecutor(ScanApiBase):
         self,
         content: Content,
         ai_profile: AiProfile,
-        tr_id: Optional[str],
-        session_id: Optional[str],
-        metadata: Optional[Metadata],
+        tr_id: str | None,
+        session_id: str | None,
+        transaction_id: str | None,
+        metadata: Metadata | None,
     ) -> ScanResponse:
         """
         Create and execute a synchronous scan request.
@@ -55,6 +55,7 @@ class ScanExecutor(ScanApiBase):
             ai_profile (AiProfile): The AI profile to be used for scanning.
             tr_id (str): Optionally Provide any unique identifier string for correlating the prompt and response transactions. This is an optional field. The tr_id value received for scan request is returned in the scan response along with the scan ID
             session_id (str): Optionally send session_id to track session views
+            transaction_id (str): Optionally provide a transaction identifier for tracking and correlating requests
             metadata (Metadata): Optionally send the app_name, app_user, and ai_model in the metadata
 
         Returns:
@@ -65,6 +66,7 @@ class ScanExecutor(ScanApiBase):
                 scan_request=ScanRequest(
                     tr_id=tr_id,
                     session_id=session_id,
+                    transaction_id=transaction_id,
                     contents=[
                         ScanRequestContentsInner(
                             prompt=content.prompt,

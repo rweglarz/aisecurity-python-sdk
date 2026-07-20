@@ -65,6 +65,9 @@ class ResponseDetected(BaseModel):
     topic_violation: Optional[StrictBool] = Field(
         default=None, description="Indicates whether response contains any content violates topic guardrails"
     )
+    source_code: Optional[StrictBool] = Field(
+        default=None, description="Indicates whether response contains any source code"
+    )
     __properties: ClassVar[List[str]] = [
         "url_cats",
         "dlp",
@@ -74,6 +77,7 @@ class ResponseDetected(BaseModel):
         "agent",
         "ungrounded",
         "topic_violation",
+        "source_code",
     ]
 
     model_config = ConfigDict(
@@ -133,5 +137,6 @@ class ResponseDetected(BaseModel):
             "agent": obj.get("agent"),
             "ungrounded": obj.get("ungrounded"),
             "topic_violation": obj.get("topic_violation"),
+            "source_code": obj.get("source_code"),
         })
         return _obj

@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **topic_guardrails_details** | [**TopicGuardRails**](TopicGuardRails.md) |  | [optional] 
+**toxic_content_details** | [**ToxicContentDetails**](ToxicContentDetails.md) |  | [optional] 
 
 ## Example
 

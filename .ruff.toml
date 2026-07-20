@@ -3,8 +3,8 @@
 # Ruff Linting & Formatting #
 #############################
 
-# Assume Python 3.9
-target-version = "py39"
+# Assume Python 3.10 (minimum required version)
+target-version = "py310"
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -180,3 +180,4 @@ docstring-code-format = true
 #
 # This only has an effect when the `docstring-code-format` setting is enabled.
 docstring-code-line-length = "dynamic"
+

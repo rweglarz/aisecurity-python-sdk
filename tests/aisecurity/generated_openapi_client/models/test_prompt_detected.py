@@ -55,7 +55,8 @@ class TestPromptDetected(unittest.TestCase):
                 toxic_content = True,
                 malicious_code = True,
                 agent = True,
-                topic_violation = True
+                topic_violation = True,
+                source_code = True
             )
         else:
             return PromptDetected(

@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **verdict** | **str** | Detection service verdict such as \&quot;malicious\&quot; or \&quot;benign\&quot; | [optional] 
 **malware_script_report** | [**MalwareReportObject**](MalwareReportObject.md) |  | [optional] 
 **command_injection_report** | [**List[CmdEntryObject]**](CmdEntryObject.md) |  | [optional] 
+**truncation_info** | [**TruncationInfoObject**](TruncationInfoObject.md) |  | [optional] 
 
 ## Example
 

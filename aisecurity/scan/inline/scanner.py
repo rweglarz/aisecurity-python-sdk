@@ -14,7 +14,6 @@
 # arising out of these terms or the use or nature of the software, under
 # any kind of legal claim.
 
-from typing import Optional
 
 from aisecurity.generated_openapi_client import (
     AiProfile,
@@ -50,9 +49,10 @@ class Scanner(BaseLogger):
         self,
         ai_profile: AiProfile,
         content: Content,
-        tr_id: Optional[str] = None,
-        session_id: Optional[str] = None,
-        metadata: Optional[Metadata] = None,
+        tr_id: str | None = None,
+        session_id: str | None = None,
+        transaction_id: str | None = None,
+        metadata: Metadata | None = None,
     ) -> ScanResponse:
         """
         Perform a synchronous scan.
@@ -66,6 +66,7 @@ class Scanner(BaseLogger):
                 transactions. This is an optional field. The tr_id value received for scan request is returned in
                 the scan response along with the scan ID.
             session_id (str): Optionally send session_id to track session views
+            transaction_id (str): Optionally provide a transaction identifier for tracking and correlating requests
             metadata (Metadata): Optionally send the app_name, app_user, and ai_model in the metadata
 
         Returns:
@@ -75,7 +76,12 @@ class Scanner(BaseLogger):
             self._scan_executor = ScanExecutor()
 
         scan_response = self._scan_executor.sync_request(
-            ai_profile=ai_profile, content=content, tr_id=tr_id, session_id=session_id, metadata=metadata
+            ai_profile=ai_profile,
+            content=content,
+            tr_id=tr_id,
+            session_id=session_id,
+            transaction_id=transaction_id,
+            metadata=metadata,
         )
 
         self.logger.info(f"event={self.sync_scan.__name__} ")

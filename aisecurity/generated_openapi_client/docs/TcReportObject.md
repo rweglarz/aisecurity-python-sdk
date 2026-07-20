@@ -5,8 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**confidence** | **str** | Confidence level of the threat classification (“high\&quot; and \&quot;moderate\&quot;) | [optional] 
+**confidence** | **str** | Confidence level of the threat classification (\&quot;high\&quot; and \&quot;moderate\&quot;) | [optional] 
 **verdict** | **str** | Detection service verdict such as \&quot;malicious\&quot; or \&quot;benign\&quot; | [optional] 
+**toxic_categories** | **List[str]** | Indicates the list of topics that is detected | [optional] 
 
 ## Example
 

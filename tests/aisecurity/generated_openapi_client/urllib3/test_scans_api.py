@@ -94,6 +94,9 @@ class TestScansApi(unittest.TestCase):
             response_detected=ResponseDetected(url_cats=False, dlp=False),
             created_at=datetime.now(timezone.utc),
             completed_at=datetime.now(timezone.utc),
+            timeout=False,
+            error=False,
+            errors=[],
         )
 
         self.mock_scans_api.scan_sync_request = Mock(return_value=mock_scan_response)

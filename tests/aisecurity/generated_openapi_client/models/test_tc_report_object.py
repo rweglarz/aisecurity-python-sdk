@@ -50,7 +50,10 @@ class TestTcReportObject(unittest.TestCase):
         if include_optional:
             return TcReportObject(
                 confidence = '',
-                verdict = ''
+                verdict = '',
+                toxic_categories = [
+                    ''
+                    ]
             )
         else:
             return TcReportObject(

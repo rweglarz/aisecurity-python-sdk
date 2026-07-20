@@ -55,6 +55,10 @@ class TestPromptDetectionDetails(unittest.TestCase):
                         ],
                     blocked_topics = [
                         ''
+                        ], ),
+                toxic_content_details = aisecurity.generated_openapi_client.models.toxic_content_details.ToxicContentDetails(
+                    toxic_categories = [
+                        ''
                         ], )
             )
         else:

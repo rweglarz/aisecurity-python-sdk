@@ -10,9 +10,10 @@ Name | Type | Description | Notes
 **scan_id** | **str** | Unique identifier for the scan | 
 **tr_id** | **str** | Unique identifier for the transaction | [optional] 
 **session_id** | **str** | Unique identifier for tracking Sessions | [optional] 
+**transaction_id** | **str** | Unique identifier for the transaction | [optional] 
 **profile_id** | **str** | Unique identifier of the AI security profile used for scanning | [optional] 
 **profile_name** | **str** | AI security profile name used for scanning | [optional] 
-**category** | **str** | Category of the scanned content verdicts such as \&quot;malicious\&quot; or \&quot;benign\&quot; | 
+**category** | **str** | Category of the scanned content verdicts such as \&quot;malicious\&quot;, \&quot;benign\&quot;, \&quot;error\&quot; or \&quot;timeout\&quot; | 
 **action** | **str** | The action is set to \&quot;block\&quot; or \&quot;allow\&quot; based on AI security profile used for scanning | 
 **prompt_detected** | [**PromptDetected**](PromptDetected.md) |  | [optional] 
 **response_detected** | [**ResponseDetected**](ResponseDetected.md) |  | [optional] 
@@ -23,6 +24,9 @@ Name | Type | Description | Notes
 **tool_detected** | [**ToolDetected**](ToolDetected.md) |  | [optional] 
 **created_at** | **datetime** | Scan request timestamp | [optional] 
 **completed_at** | **datetime** | Scan completion timestamp | [optional] 
+**timeout** | **bool** | Indicates whether any detection service timed out during scanning | 
+**error** | **bool** | Indicates whether any detection service encountered an error during scanning | 
+**errors** | [**List[ContentErrors]**](ContentErrors.md) | List of detection service errors or timeouts | 
 
 ## Example
 

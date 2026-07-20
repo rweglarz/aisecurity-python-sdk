@@ -64,7 +64,12 @@ class TestMcReportObject(unittest.TestCase):
                     aisecurity.generated_openapi_client.models.cmd_entry_object.CmdEntryObject(
                         code_block = '',
                         verdict = '', )
-                    ]
+                    ],
+                truncation_info = aisecurity.generated_openapi_client.models.truncation_info_object.TruncationInfoObject(
+                    payload_truncated = True,
+                    original_payload_length = 56,
+                    truncated_payload_length = 56,
+                    truncation_mode = 'tail', )
             )
         else:
             return McReportObject(
